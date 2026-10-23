@@ -194,25 +194,56 @@ addEventListener('click', async function () {
   }
 
   try {
-    const url = new URL(value);
+    
+const url = new URL(value);
 
-    if (url.protocol !== 'https:' &&
-        url.protocol !== 'http:') {
-      throw new Error('URL tidak valid');
-    }
+if (url.protocol !== 'https:' &&
+    url.protocol !== 'http:') {
+  throw new Error('URL tidak valid');
+}
 
-    const link = document.createElement('a');
-    link.href = url.href;
-    link.download = '';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+const host = url.hostname.toLowerCase();
 
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+if (
+  host === 'youtube.com' ||
+  host.endsWith('.youtube.com') ||
+  host === 'youtu.be' ||
+  host.endsWith('.youtu.be')
+) {
+  message.textContent =
+    'Untuk video YouTube, gunakan opsi unduh resmi yang tersedia. VideoDown tidak mengunduh langsung dari YouTube.';
+  return;
+}
 
-    message.textContent =
-      'Permintaan unduh dikirim. Jika tidak berhasil, server mungkin tidak mengizinkan unduhan langsung.';
+if (
+  host === 'tiktok.com' ||
+  host.endsWith('.tiktok.com') ||
+  host === 'instagram.com' ||
+  host.endsWith('.instagram.com')
+) {
+  message.textContent =
+    'Gunakan fitur unduh resmi platform atau file video yang memang diizinkan untuk diunduh.';
+  return;
+}
+
+if (!url.pathname.toLowerCase().endsWith('.mp4')) {
+  message.textContent =
+    'Masukkan tautan langsung ke file MP4 yang diizinkan untuk diunduh.';
+  return;
+}
+
+const link = document.createElement('a');
+link.href = url.href;
+link.download = '';
+link.rel = 'noopener noreferrer';
+
+document.body.appendChild(link);
+link.click();
+link.remove();
+
+message.textContent =
+  'Permintaan unduh MP4 telah dikirim. Jika gagal, server mungkin tidak mengizinkan unduhan langsung.';
+
   } catch (error) {
     message.textContent =
       'Tautan tidak valid. Periksa kembali alamatnya.';
