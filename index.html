@@ -205,6 +205,29 @@
     button.
 addEventListener('click', async function () {
   const value = input.value.trim();
+  if (!value) {
+  message.textContent = 'Masukkan tautan video terlebih dahulu.';
+  return;
+}
+
+const youtubeMatch = value.match(
+  /(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/
+);
+
+if (youtubeMatch) {
+  const videoId = youtubeMatch[1];
+
+  document.getElementById('youtube-frame').src =
+    'https://www.youtube.com/embed/' + videoId;
+
+  document.getElementById('youtube-player').style.display = 'block';
+
+  document.getElementById('youtube-open').href =
+    'https://www.youtube.com/watch?v=' + videoId;
+
+  message.textContent = 'Video YouTube ditampilkan di bawah.';
+  return;
+}
 
   if (!value) {
     message.textContent = 'Masukkan tautan video terlebih dahulu.';
